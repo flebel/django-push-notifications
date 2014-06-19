@@ -49,7 +49,11 @@ class HexIntegerField(with_metaclass(models.SubfieldBase, models.BigIntegerField
 	def get_prep_value(self, value):
 		if value is None or value == "":
 			return None
-		value = int(value, 16)
+		try:
+			value = int(value, 16)
+		except TypeError:
+			# Value is already in base 16
+			return value
 		# on postgres only, interpret as signed
 		if connection.settings_dict["ENGINE"] == "django.db.backends.postgresql_psycopg2":
 			value = struct.unpack("q", struct.pack("Q", value))[0]
