@@ -14,6 +14,10 @@ except ImportError:
 __all__ = ["HexadecimalField", "HexIntegerField"]
 
 hex_re = re.compile(r"^0x[0-9a-fA-F]+$")
+postgres_engines = [
+	"django.db.backends.postgresql_psycopg2",
+	"django.contrib.gis.db.backends.postgis",
+]
 
 
 class HexadecimalField(forms.CharField):
@@ -55,7 +59,7 @@ class HexIntegerField(with_metaclass(models.SubfieldBase, models.BigIntegerField
 			# Value is already in base 16
 			return value
 		# on postgres only, interpret as signed
-		if connection.settings_dict["ENGINE"] == "django.db.backends.postgresql_psycopg2":
+		if connection.settings_dict["ENGINE"] in postgres_engines:
 			value = struct.unpack("q", struct.pack("Q", value))[0]
 		return value
 
@@ -65,7 +69,7 @@ class HexIntegerField(with_metaclass(models.SubfieldBase, models.BigIntegerField
 		if value is None:
 			return ""
 		# on postgres only, re-interpret from signed to unsigned
-		if connection.settings_dict["ENGINE"] == "django.db.backends.postgresql_psycopg2":
+		if connection.settings_dict["ENGINE"] in postgres_engines:
 			value = hex(struct.unpack("Q", struct.pack("q", value))[0])
 		return value
 
