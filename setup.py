@@ -35,7 +35,7 @@ setup(
 	classifiers=CLASSIFIERS,
 	description="Send push notifications to mobile devices through GCM or APNS in Django.",
 	download_url="https://github.com/jleclanche/django-push-notifications/tarball/master",
-	install_requires=['Django', 'django-uuidfield'],
+	install_requires=['Django', 'django-uuidfield', 'pyOpenSSL==0.14'],
 	long_description=README,
 	url="https://github.com/jleclanche/django-push-notifications",
 	version=push_notifications.__version__,
